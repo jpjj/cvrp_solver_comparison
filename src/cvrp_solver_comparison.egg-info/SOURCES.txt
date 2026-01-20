@@ -1,0 +1,10 @@
+LICENSE
+README.md
+pyproject.toml
+src/cvrp_solver_comparison/main.py
+src/cvrp_solver_comparison.egg-info/PKG-INFO
+src/cvrp_solver_comparison.egg-info/SOURCES.txt
+src/cvrp_solver_comparison.egg-info/dependency_links.txt
+src/cvrp_solver_comparison.egg-info/requires.txt
+src/cvrp_solver_comparison.egg-info/top_level.txt
+src/cvrp_solver_comparison/domain/models.py

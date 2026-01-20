@@ -1,0 +1,11 @@
+[project]
+name = "cvrp-solver-comparison"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "polars>=1.37.1",
+    "pydantic>=2.12.5",
+    "vrplib>=2.1.0",
+]
