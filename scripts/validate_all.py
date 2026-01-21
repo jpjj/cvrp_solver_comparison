@@ -1,6 +1,7 @@
 import vrplib
 from pathlib import Path
-from cvrp_solver_comparison.domain.models import Instance, Solution, validate
+from cvrp_solver_comparison.domain.models import Instance, Solution
+from cvrp_solver_comparison.domain.utils import validate
 
 
 instance_names = {f.name.split(".")[0] for f in Path("data/X").iterdir() if f.is_file()}

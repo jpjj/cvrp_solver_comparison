@@ -5,8 +5,10 @@ Summary: Add your description here
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Requires-Dist: polars>=1.37.1
 Requires-Dist: pydantic>=2.12.5
-Requires-Dist: vrplib>=2.1.0
+Requires-Dist: pyvrp>=0.11.3
+Requires-Dist: vrplib>=1.5.1
 Dynamic: license-file
 
 # cvrp_solver_comparison

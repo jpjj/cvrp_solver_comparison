@@ -8,3 +8,5 @@ src/cvrp_solver_comparison.egg-info/dependency_links.txt
 src/cvrp_solver_comparison.egg-info/requires.txt
 src/cvrp_solver_comparison.egg-info/top_level.txt
 src/cvrp_solver_comparison/domain/models.py
+src/cvrp_solver_comparison/domain/solver.py
+src/cvrp_solver_comparison/domain/utils.py

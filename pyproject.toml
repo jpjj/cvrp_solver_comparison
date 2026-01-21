@@ -7,5 +7,6 @@ requires-python = ">=3.10"
 dependencies = [
     "polars>=1.37.1",
     "pydantic>=2.12.5",
-    "vrplib>=2.1.0",
+    "pyvrp>=0.11.3",
+    "vrplib>=1.5.1",
 ]
