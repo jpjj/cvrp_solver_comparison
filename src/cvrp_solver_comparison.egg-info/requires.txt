@@ -1,4 +1,6 @@
+ortools>=9.15.6755
 polars>=1.37.1
 pydantic>=2.12.5
 pyvrp>=0.11.3
+pyvroom>=1.14.0
 vrplib>=1.5.1

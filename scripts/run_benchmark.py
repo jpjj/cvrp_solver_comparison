@@ -4,7 +4,7 @@ from pathlib import Path
 from cvrp_solver_comparison.domain.models import Instance, Solution
 import polars as pl
 
-from cvrp_solver_comparison.domain.solver import create_solver
+from cvrp_solver_comparison.solver.solver import create_solver
 from cvrp_solver_comparison.domain.utils import validate
 from datetime import datetime
 
@@ -13,15 +13,16 @@ instance_names = list(
 )
 
 solver_names = [
-    "ortools"
+    "pyvrp"
 ]  # ,'pyvrp' 'ortools', 'vroom', 'timefold', 'rustvrp', 'pyhygese'
 time_limits = [1]
-num_instances = 5
+num_instances = 1
 
 results = {
     "Instance": [],
     "Size": [],
     "Time Limit (s)": [],
+    "Actual Time (s)": [],
     "Solver": [],
     "Solution Quality": [],
 }
@@ -39,7 +40,7 @@ for name in instance_names[:num_instances]:
         }
         for s_name, solver in solvers.items():
             tic = time.time()
-            solution = solver(instance)
+            solution = solver(instance, time_limit)
             toc = time.time()
             real_time = toc - tic
             if real_time > time_limit * 1.1:
@@ -50,6 +51,7 @@ for name in instance_names[:num_instances]:
             results["Instance"].append(instance.name)
             results["Size"].append(len(instance.demand))
             results["Time Limit (s)"].append(time_limit)
+            results["Actual Time (s)"].append(real_time)
             results["Solver"].append(s_name)
             results["Solution Quality"].append(solution.cost / best_solution.cost)
 
