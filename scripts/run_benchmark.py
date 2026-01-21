@@ -12,8 +12,10 @@ instance_names = list(
     set(f.name.split(".")[0] for f in Path("data/X").iterdir() if f.is_file())
 )
 
-solver_names = ["pyvrp"]  # , 'ortools', 'vroom', 'timefold', 'rustvrp', 'pyhygese'
-time_limits = [1, 2]
+solver_names = [
+    "ortools"
+]  # ,'pyvrp' 'ortools', 'vroom', 'timefold', 'rustvrp', 'pyhygese'
+time_limits = [1]
 num_instances = 5
 
 results = {
