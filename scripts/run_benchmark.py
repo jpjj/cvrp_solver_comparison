@@ -13,10 +13,12 @@ instance_names = list(
 )
 
 solver_names = [
-    "pyvrp"
+    "pyvrp",
+    "rustvrp",
+    "ortools",
 ]  # ,'pyvrp' 'ortools', 'vroom', 'timefold', 'rustvrp', 'pyhygese'
-time_limits = [1]
-num_instances = 1
+time_limits = [1, 10, 60]
+num_instances = 5
 
 results = {
     "Instance": [],
@@ -47,13 +49,17 @@ for name in instance_names[:num_instances]:
                 print(
                     f"Warning, solver {s_name} took {real_time:2f} s on instance {name} despite setting a time limit of {time_limit} s."
                 )
-            validate(solution=solution, instance=instance)
+
             results["Instance"].append(instance.name)
             results["Size"].append(len(instance.demand))
             results["Time Limit (s)"].append(time_limit)
             results["Actual Time (s)"].append(real_time)
             results["Solver"].append(s_name)
-            results["Solution Quality"].append(solution.cost / best_solution.cost)
+            if solution is not None:
+                validate(solution=solution, instance=instance)
+                results["Solution Quality"].append(solution.cost / best_solution.cost)
+            else:
+                results["Solution Quality"].append(0)
 
 df = pl.DataFrame(results)
 df.write_csv(f"data/benchmark_{datetime.now()}.csv")

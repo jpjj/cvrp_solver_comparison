@@ -57,6 +57,8 @@ def solve_with_ortools(instance: Instance, time_limit: int) -> Solution:
 
     # Solve the problem.
     solution = routing.SolveWithParameters(search_parameters)
+    if solution is None:
+        return None
     routes = []
     for vehicle_id in range(len(instance.demand)):
         if not routing.IsVehicleUsed(solution, vehicle_id):

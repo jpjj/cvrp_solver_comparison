@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 from pydantic.dataclasses import dataclass
+from dataclasses import field
 from typing import Optional
 
 
@@ -19,17 +20,18 @@ class Progress:
     dumpPopulation: bool
 
 
-Telemetry.__pydantic_model__.update_forward_refs()
+def _default_telemetry() -> Telemetry:
+    return Telemetry(
+        progress=Progress(
+            enabled=True, logBest=100, logPopulation=1000, dumpPopulation=False
+        )
+    )
 
 
 @dataclass
 class Config:
     termination: Termination
-    telemetry: Optional[Telemetry] = Telemetry(
-        progress=Progress(
-            enabled=True, logBest=100, logPopulation=1000, dumpPopulation=False
-        )
-    )
+    telemetry: Optional[Telemetry] = field(default_factory=_default_telemetry)
     environment: Optional[Environment] = None
 
 
@@ -44,16 +46,13 @@ class Logging:
     enabled: bool
 
 
-Logging.__pydantic_model__.update_forward_refs()
+def _default_logging() -> Logging:
+    return Logging(enabled=True)
 
 
 @dataclass
 class Environment:
-    logging: Logging = Logging(enabled=True)
+    logging: Logging = field(default_factory=_default_logging)
     isExperimental: Optional[bool] = None
 
 
-Config.__pydantic_model__.update_forward_refs()
-Telemetry.__pydantic_model__.update_forward_refs()
-Termination.__pydantic_model__.update_forward_refs()
-Environment.__pydantic_model__.update_forward_refs()
