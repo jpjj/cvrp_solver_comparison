@@ -21,7 +21,7 @@ solver_names = [
     "timefold"
 ]  # ,'pyvrp' 'ortools', 'vroom', 'timefold', 'rustvrp', 'pyhygese'
 time_limits = [1, 10, 60]
-num_instances = 10
+num_instances = 5
 
 results = {
     "Instance": [],
@@ -31,7 +31,7 @@ results = {
     "Solver": [],
     "Solution Quality": [],
 }
-
+instance_names.sort()
 for name in instance_names[:num_instances]:
     instance = vrplib.read_instance(f"data/X/{name}.vrp")
     solution = vrplib.read_solution(f"data/X/{name}.sol")

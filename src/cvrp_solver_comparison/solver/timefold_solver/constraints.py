@@ -1,6 +1,11 @@
-from timefold.solver.score import ConstraintFactory, HardSoftScore, constraint_provider
+from timefold.solver.score import (
+    ConstraintFactory,
+    ConstraintCollectors,
+    HardSoftScore,
+    constraint_provider,
+)
 
-from .domain import DistanceMatrix, Vehicle, Visit
+from .domain import DistanceMatrix, Visit
 
 VEHICLE_CAPACITY = "vehicleCapacity"
 MINIMIZE_TRAVEL_TIME = "minimizeTravelTime"
@@ -13,7 +18,7 @@ def define_constraints(factory: ConstraintFactory):
         # Hard constraints
         vehicle_capacity(factory),
         # Soft constraints
-        minimize_travel_time(factory),
+        *minimize_travel_time(factory),
     ]
 
 
@@ -24,11 +29,16 @@ def define_constraints(factory: ConstraintFactory):
 
 def vehicle_capacity(factory: ConstraintFactory):
     return (
-        factory.for_each(Vehicle)
-        .filter(lambda vehicle: vehicle.calculate_total_demand() > vehicle.capacity)
+        factory.for_each(Visit)
+        .filter(lambda visit: visit.vehicle is not None)
+        .group_by(
+            lambda visit: visit.vehicle,
+            ConstraintCollectors.sum(lambda visit: visit.demand),
+        )
+        .filter(lambda vehicle, total_demand: total_demand > vehicle.capacity)
         .penalize(
             HardSoftScore.ONE_HARD,
-            lambda vehicle: vehicle.calculate_total_demand() - vehicle.capacity,
+            lambda vehicle, total_demand: total_demand - vehicle.capacity,
         )
         .as_constraint(VEHICLE_CAPACITY)
     )
@@ -40,14 +50,42 @@ def vehicle_capacity(factory: ConstraintFactory):
 
 
 def minimize_travel_time(factory: ConstraintFactory):
-    return (
-        factory.for_each(Vehicle)
+    # Penalize arc from depot to first visit
+    depot_to_first = (
+        factory.for_each(Visit)
+        .filter(
+            lambda visit: visit.vehicle is not None and visit.previous_visit is None
+        )
         .join(DistanceMatrix)
         .penalize(
             HardSoftScore.ONE_SOFT,
-            lambda vehicle, distance_matrix: vehicle.calculate_total_driving_time_seconds(
-                distance_matrix.matrix
-            ),
+            lambda visit, dm: dm.matrix[visit.vehicle.home_location][visit.location],
         )
-        .as_constraint(MINIMIZE_TRAVEL_TIME)
+        .as_constraint("depotToFirstVisit")
     )
+
+    # Penalize arcs between consecutive visits
+    visit_to_visit = (
+        factory.for_each(Visit)
+        .filter(lambda visit: visit.previous_visit is not None)
+        .join(DistanceMatrix)
+        .penalize(
+            HardSoftScore.ONE_SOFT,
+            lambda visit, dm: dm.matrix[visit.previous_visit.location][visit.location],
+        )
+        .as_constraint("visitToVisit")
+    )
+
+    # Penalize arc from last visit back to depot
+    last_to_depot = (
+        factory.for_each(Visit)
+        .filter(lambda visit: visit.vehicle is not None and visit.next_visit is None)
+        .join(DistanceMatrix)
+        .penalize(
+            HardSoftScore.ONE_SOFT,
+            lambda visit, dm: dm.matrix[visit.location][visit.vehicle.home_location],
+        )
+        .as_constraint("lastVisitToDepot")
+    )
+
+    return [depot_to_first, visit_to_visit, last_to_depot]
