@@ -8,5 +8,16 @@ src/cvrp_solver_comparison.egg-info/dependency_links.txt
 src/cvrp_solver_comparison.egg-info/requires.txt
 src/cvrp_solver_comparison.egg-info/top_level.txt
 src/cvrp_solver_comparison/domain/models.py
-src/cvrp_solver_comparison/domain/solver.py
 src/cvrp_solver_comparison/domain/utils.py
+src/cvrp_solver_comparison/solver/ortools.py
+src/cvrp_solver_comparison/solver/pyhygese.py
+src/cvrp_solver_comparison/solver/pyvrp.py
+src/cvrp_solver_comparison/solver/solver.py
+src/cvrp_solver_comparison/solver/vroom.py
+src/cvrp_solver_comparison/solver/rustvrp/config_types.py
+src/cvrp_solver_comparison/solver/rustvrp/pragmatic_types.py
+src/cvrp_solver_comparison/solver/rustvrp/rustvrp.py
+src/cvrp_solver_comparison/solver/timefold/constraints.py
+src/cvrp_solver_comparison/solver/timefold/domain.py
+src/cvrp_solver_comparison/solver/timefold/json_serialization.py
+src/cvrp_solver_comparison/solver/timefold/timefold.py

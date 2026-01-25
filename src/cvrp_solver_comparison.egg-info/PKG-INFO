@@ -11,6 +11,8 @@ Requires-Dist: pydantic>=2.12.5
 Requires-Dist: pyvrp>=0.11.3
 Requires-Dist: pyvroom>=1.14.0
 Requires-Dist: vrplib>=1.5.1
+Requires-Dist: timefold>=1.24.0b0
+Requires-Dist: hygese>=0.0.0.10
 Dynamic: license-file
 
 # cvrp_solver_comparison

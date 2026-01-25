@@ -4,7 +4,9 @@ from cvrp_solver_comparison.solver.ortools import solve_with_ortools
 from cvrp_solver_comparison.solver.pyhygese import solve_with_pyhygese
 from cvrp_solver_comparison.solver.pyvrp import solve_with_pyvrp
 from cvrp_solver_comparison.solver.rustvrp.rustvrp import solve_with_rustvrp
-from cvrp_solver_comparison.solver.timefold import solve_with_timefold
+from cvrp_solver_comparison.solver.timefold_solver.timefold_solver import (
+    solve_with_timefold,
+)
 from cvrp_solver_comparison.solver.vroom import solve_with_vroom
 
 

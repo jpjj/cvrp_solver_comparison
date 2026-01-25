@@ -13,12 +13,15 @@ instance_names = list(
 )
 
 solver_names = [
-    "pyvrp",
-    "rustvrp",
-    "ortools",
+    # "vroom",
+    # "pyvrp",
+    # "rustvrp",
+    # "ortools",
+    # "pyhygese",
+    "timefold"
 ]  # ,'pyvrp' 'ortools', 'vroom', 'timefold', 'rustvrp', 'pyhygese'
 time_limits = [1, 10, 60]
-num_instances = 5
+num_instances = 10
 
 results = {
     "Instance": [],
@@ -29,13 +32,15 @@ results = {
     "Solution Quality": [],
 }
 
-
 for name in instance_names[:num_instances]:
     instance = vrplib.read_instance(f"data/X/{name}.vrp")
     solution = vrplib.read_solution(f"data/X/{name}.sol")
     instance = Instance.model_validate(instance)
     best_solution = Solution.model_validate(solution)
     for time_limit in time_limits:
+        if time_limit is None:
+            assert solver_names[0] == "vroom"
+            time_limit = 1
         solvers = {
             name: create_solver(method=name, time_limit=time_limit)
             for name in solver_names
@@ -53,13 +58,22 @@ for name in instance_names[:num_instances]:
             results["Instance"].append(instance.name)
             results["Size"].append(len(instance.demand))
             results["Time Limit (s)"].append(time_limit)
-            results["Actual Time (s)"].append(real_time)
+            results["Actual Time (s)"].append(float(real_time))
             results["Solver"].append(s_name)
-            if solution is not None:
+            try:
                 validate(solution=solution, instance=instance)
-                results["Solution Quality"].append(solution.cost / best_solution.cost)
-            else:
-                results["Solution Quality"].append(0)
+                results["Solution Quality"].append(
+                    float(solution.cost / best_solution.cost)
+                )
+            except Exception as e:  # noqa: E722
+                results["Solution Quality"].append(-1.0)
+            if s_name == "vroom":
+                time_limit = max(
+                    1, round(real_time)
+                )  # everybody is taking the time that vroom needed
 
+    # just to be save, save after every instance:
+    df = pl.DataFrame(results)
+    df.write_csv(f"data/benchmark_no_vroom{datetime.now()}.csv")
 df = pl.DataFrame(results)
-df.write_csv(f"data/benchmark_{datetime.now()}.csv")
+df.write_csv(f"data/benchmark_no_vroom{datetime.now()}.csv")
